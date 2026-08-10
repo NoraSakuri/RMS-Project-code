@@ -1,0 +1,13 @@
+{
+    "name": "nora/rmsprojectcode",
+    "authors": [
+        {
+            "name": "Danny",
+            "email": "danny@example.com"
+        }
+    ],
+    "require": {
+        "dompdf/dompdf": "^3.1",
+        "phpoffice/phpspreadsheet": "^5.9"
+    }
+}

@@ -1,0 +1,533 @@
+/* ==============================
+   Invoice Page
+============================== */
+
+.invoice-page {
+    padding: 30px;
+    min-height: calc(100vh - 90px);
+    background: #f5f7fb;
+}
+
+.invoice-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto 24px;
+}
+
+.invoice-page-header h2 {
+    margin: 0 0 6px;
+    font-size: 30px;
+    color: #111827;
+}
+
+.invoice-page-header p {
+    margin: 0;
+    color: #6b7280;
+}
+
+.invoice-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.back-button,
+.print-invoice-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 11px 18px;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.back-button {
+    background: #eef2ff;
+    color: #4f46e5;
+}
+
+.back-button:hover {
+    background: #e0e7ff;
+}
+
+.print-invoice-button {
+    background: #ff6b35;
+    color: #ffffff;
+}
+
+.print-invoice-button:hover:not(:disabled) {
+    background: #ea580c;
+    transform: translateY(-1px);
+}
+
+.print-invoice-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+/* ==============================
+   Loading and Error Message
+============================== */
+
+.invoice-message {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 18px 20px;
+    border-radius: 14px;
+    background: #ffffff;
+    color: #6b7280;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.invoice-message.error {
+    border: 1px solid #fecaca;
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+/* ==============================
+   Invoice Receipt
+============================== */
+
+.invoice-receipt {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 38px;
+    border: 1px solid #edf0f5;
+    border-radius: 24px;
+    background: #ffffff;
+    box-shadow: 0 18px 50px rgba(15, 23, 42, 0.09);
+}
+
+/* ==============================
+   Brand and Invoice Number
+============================== */
+
+.receipt-brand {
+    display: grid;
+    grid-template-columns: 72px 1fr auto;
+    align-items: center;
+    column-gap: 18px;
+    padding-bottom: 26px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.receipt-logo {
+    width: 72px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: visible;
+}
+
+.receipt-logo img {
+    width: 68px;
+    height: 68px;
+    display: block;
+    object-fit: contain;
+}
+
+.receipt-brand h1 {
+    margin: 0 0 6px;
+    font-size: 25px;
+    line-height: 1.25;
+    color: #111827;
+}
+
+.receipt-brand p {
+    margin: 0;
+    color: #6b7280;
+}
+
+.receipt-title {
+    position: static;
+    text-align: right;
+    align-self: center;
+}
+
+.receipt-title h2 {
+    margin: 0 0 7px;
+    font-size: 13px;
+    color: #9ca3af;
+    letter-spacing: 3px;
+}
+
+.receipt-title strong {
+    display: block;
+    font-size: 23px;
+    color: #111827;
+}
+
+/* ==============================
+   Invoice Information
+============================== */
+
+.receipt-information {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin: 28px 0;
+}
+
+.receipt-information > div {
+    min-height: 78px;
+    padding: 15px 16px;
+    border: 1px solid #edf0f5;
+    border-radius: 14px;
+    background: #f8fafc;
+}
+
+.receipt-information span {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.receipt-information strong {
+    display: block;
+    color: #111827;
+    font-size: 14px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.paid-status {
+    display: inline-flex !important;
+    width: fit-content;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #dcfce7;
+    color: #15803d !important;
+    font-size: 12px !important;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+/* ==============================
+   Item Table
+============================== */
+
+.receipt-table-wrapper {
+    overflow-x: auto;
+    border: 1px solid #edf0f5;
+    border-radius: 16px;
+}
+
+.receipt-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.receipt-table thead {
+    background: #f8fafc;
+}
+
+.receipt-table th {
+    padding: 15px 18px;
+    border-bottom: 1px solid #e5e7eb;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: left;
+}
+
+.receipt-table td {
+    padding: 17px 18px;
+    border-bottom: 1px solid #eef2f7;
+    color: #1f2937;
+    font-size: 14px;
+}
+
+.receipt-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.receipt-table th:nth-child(2),
+.receipt-table td:nth-child(2) {
+    width: 90px;
+    text-align: center;
+}
+
+.receipt-table th:nth-child(3),
+.receipt-table td:nth-child(3),
+.receipt-table th:nth-child(4),
+.receipt-table td:nth-child(4) {
+    width: 170px;
+    text-align: right;
+}
+
+/* ==============================
+   Payment Summary
+============================== */
+
+.receipt-summary {
+    width: 360px;
+    margin: 28px 0 0 auto;
+    padding: 20px 22px;
+    border-radius: 16px;
+    background: #f8fafc;
+}
+
+.receipt-summary > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 8px 0;
+    color: #475569;
+}
+
+.receipt-summary span {
+    font-size: 14px;
+}
+
+.receipt-summary strong {
+    color: #111827;
+    font-size: 14px;
+    text-align: right;
+}
+
+.receipt-total {
+    margin-top: 10px;
+    padding-top: 16px !important;
+    border-top: 2px solid #e5e7eb;
+}
+
+.receipt-total span {
+    font-size: 17px;
+    font-weight: 800;
+    color: #111827;
+}
+
+.receipt-total strong {
+    font-size: 20px;
+    color: #ff6b35;
+}
+
+/* ==============================
+   Receipt Footer
+============================== */
+
+.receipt-footer {
+    margin-top: 30px;
+    padding-top: 22px;
+    border-top: 1px dashed #d1d5db;
+    text-align: center;
+}
+
+.receipt-footer p {
+    margin: 0 0 7px;
+    color: #111827;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.receipt-footer small {
+    color: #9ca3af;
+    font-size: 12px;
+}
+
+/* ==============================
+   Responsive
+============================== */
+
+@media (max-width: 850px) {
+    .invoice-page {
+        padding: 20px;
+    }
+
+    .invoice-page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .invoice-receipt {
+        padding: 25px;
+    }
+
+    .receipt-brand {
+        padding-right: 0;
+    }
+
+    .receipt-title {
+        position: static;
+        margin-left: auto;
+    }
+
+    .receipt-information {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .invoice-header-actions {
+        width: 100%;
+    }
+
+    .back-button,
+    .print-invoice-button {
+        flex: 1;
+    }
+
+    .receipt-brand {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .receipt-title {
+        width: 100%;
+        margin: 5px 0 0;
+        text-align: left;
+    }
+
+    .receipt-information {
+        grid-template-columns: 1fr;
+    }
+
+    .receipt-summary {
+        width: auto;
+    }
+}
+
+/* ==============================
+   Print Layout
+============================== */
+
+@media print {
+    @page {
+        size: A4;
+        margin: 12mm;
+    }
+
+    html,
+    body {
+        width: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+    }
+
+    .sidebar,
+    .topbar,
+    .invoice-page-header,
+    .invoice-message {
+        display: none !important;
+    }
+
+    .wrapper,
+    .main,
+    .content,
+    .invoice-page {
+        display: block !important;
+        width: 100% !important;
+        max-width: none !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+    }
+
+    .invoice-receipt {
+        display: block !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 16px !important;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+
+    .receipt-information {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .receipt-information > div {
+        min-height: 65px;
+        padding: 11px 12px;
+    }
+
+    .receipt-table-wrapper {
+        overflow: visible;
+    }
+
+    .receipt-summary {
+        width: 320px;
+        page-break-inside: avoid;
+    }
+
+    .receipt-brand,
+    .receipt-table,
+    .receipt-summary,
+    .receipt-footer {
+        page-break-inside: avoid;
+    }
+
+    .receipt-logo,
+    .paid-status,
+    .receipt-table thead,
+    .receipt-summary {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+}
+
+.receipt-brand-text {
+    min-width: 0;
+}
+
+.receipt-brand-text h1 {
+    margin: 0 0 5px;
+    font-size: 25px;
+    line-height: 1.2;
+    color: #111827;
+}
+
+.receipt-brand-text p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 15px;
+}
+
+@media (max-width: 650px) {
+    .receipt-brand {
+        grid-template-columns: 60px 1fr;
+        row-gap: 16px;
+    }
+
+    .receipt-logo {
+        width: 60px;
+        height: 60px;
+    }
+
+    .receipt-logo img {
+        width: 56px;
+        height: 56px;
+    }
+
+    .receipt-title {
+        grid-column: 1 / -1;
+        text-align: left;
+    }
+}
