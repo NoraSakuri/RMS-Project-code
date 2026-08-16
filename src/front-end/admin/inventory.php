@@ -184,6 +184,8 @@ $totalSuppliers = count(array_unique($supplierNames));
                                 <input
                                     type="number"
                                     id="quantity"
+                                    min="0"
+                                    step="0.01"
                                     required>
 
                                 <label>
@@ -215,6 +217,8 @@ $totalSuppliers = count(array_unique($supplierNames));
                                 <input
                                     type="number"
                                     id="minimumStock"
+                                    min="0"
+                                    step="0.01"
                                     required>
 
                                 <label>
