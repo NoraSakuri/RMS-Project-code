@@ -332,6 +332,22 @@ margin-bottom:32px;
 
 }
 
+.recent-orders-header {
+    margin-top: 35px;
+    margin-bottom: 18px;
+}
+
+.recent-orders-header h2 {
+    margin: 0 0 5px;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.recent-orders-header p {
+    margin: 0;
+    font-size: 14px;
+    color: #64748b;
+}
 
 .chart-box{
 

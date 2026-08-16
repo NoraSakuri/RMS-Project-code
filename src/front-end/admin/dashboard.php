@@ -50,7 +50,7 @@ allowRoles(["ADMIN"]);
                 </div>
 
                 <div class="section">
-                    <h2>Recent Orders</h2>
+                    
 
                     <div class="chart-container">
 
@@ -71,6 +71,11 @@ allowRoles(["ADMIN"]);
                     <div class="chart-card">
                         <h2>Top Selling Items</h2>
                         <canvas id="sellingChart"></canvas>
+                    </div>
+
+                    <div class="recent-orders-header">
+                        <h2>Recent Orders</h2>
+                        <p>Latest orders and transaction totals</p>
                     </div>
 
                     <table class="table">
