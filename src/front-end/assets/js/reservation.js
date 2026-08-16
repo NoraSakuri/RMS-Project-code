@@ -153,6 +153,72 @@ reservationForm.addEventListener("submit", async function (event) {
     }
 });
 
+/*
+|--------------------------------------------------------------------------
+| Complete reservation
+|--------------------------------------------------------------------------
+*/
+
+document.querySelectorAll(".complete-btn").forEach(button => {
+    button.addEventListener("click", async function () {
+        const row = this.closest("tr");
+        const reservationId = row.dataset.id;
+
+        if (!reservationId) {
+            alert("Invalid reservation ID.");
+            return;
+        }
+
+        if (!confirm("Complete this reservation?")) {
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("reservation_id", reservationId);
+
+        try {
+            this.disabled = true;
+            this.textContent = "Completing...";
+
+            const response = await fetch(
+                "../../back-end/api/reservations/complete.php",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+            const text = await response.text();
+
+            let result;
+
+            try {
+                result = JSON.parse(text);
+            } catch {
+                console.error("Invalid response:", text);
+                throw new Error("Server returned invalid response.");
+            }
+
+            if (!response.ok || !result.success) {
+                throw new Error(
+                    result.message || "Unable to complete reservation."
+                );
+            }
+
+            alert(result.message);
+            window.location.reload();
+
+        } catch (error) {
+            console.error(error);
+            alert(error.message);
+
+        } finally {
+            this.disabled = false;
+            this.textContent = "Complete";
+        }
+    });
+});
+
 document.querySelectorAll(".cancel-btn").forEach(button => {
     button.addEventListener("click", async function () {
         const row = this.closest("tr");
