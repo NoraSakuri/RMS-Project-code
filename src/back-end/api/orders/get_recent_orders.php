@@ -69,11 +69,11 @@ try {
     WHERE DATE(o.order_date) = CURDATE()
 
       AND UPPER(o.status) IN (
-          'PENDING',
-          'ACCEPTED',
-          'PREPARING',
-          'READY'
-      )
+         'PENDING',
+         'CONFIRMED',
+         'PREPARING',
+         'READY'
+  )
 
       AND UPPER(o.chef_action) NOT IN (
           'CANCELLED',
