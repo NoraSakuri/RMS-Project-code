@@ -2,13 +2,19 @@
 
 declare(strict_types=1);
 
-header('Content-Type: application/json; charset=utf-8');
+header(
+    'Content-Type: application/json; charset=utf-8'
+);
+
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
+
 require_once __DIR__ . "/../../../../config/database.php";
+
+
 
 function respond(
     bool $success,
@@ -16,152 +22,401 @@ function respond(
     array $data = [],
     int $statusCode = 200
 ): never {
+
+
     http_response_code($statusCode);
 
+
     echo json_encode(
-        array_merge(
-            [
-                'success' => $success,
-                'message' => $message
-            ],
-            $data
-        ),
+        [
+            "success"=>$success,
+            "message"=>$message,
+            "data"=>$data
+        ],
         JSON_UNESCAPED_UNICODE
     );
 
+
     exit;
+
 }
 
-if (empty($_SESSION['staff_id'])) {
-    respond(false, 'Your session has expired.', [], 401);
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Authentication
+|--------------------------------------------------------------------------
+*/
+
+
+if(empty($_SESSION['staff_id'])){
+
+
+    respond(
+        false,
+        "Your session has expired.",
+        [],
+        401
+    );
+
+
 }
 
-$role = strtoupper(
-    (string) ($_SESSION['role'] ?? '')
+
+
+
+$role =
+strtoupper(
+    $_SESSION['role'] ?? ''
 );
 
-if (!in_array(
+
+
+if(!in_array(
     $role,
-    ['ADMIN', 'MANAGER'],
+    ['ADMIN','MANAGER'],
     true
-)) {
-    respond(false, 'Access denied.', [], 403);
+)){
+
+
+    respond(
+        false,
+        "Access denied.",
+        [],
+        403
+    );
+
+
 }
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    respond(false, 'Invalid request method.', [], 405);
+
+
+
+
+if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+
+
+    respond(
+        false,
+        "Invalid request method.",
+        [],
+        405
+    );
+
+
 }
 
-$input = json_decode(
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Input
+|--------------------------------------------------------------------------
+*/
+
+
+$input =
+json_decode(
     file_get_contents('php://input'),
     true
 );
 
-if (!is_array($input)) {
-    respond(false, 'Invalid recipe data.', [], 422);
+
+
+if(!is_array($input)){
+
+
+    respond(
+        false,
+        "Invalid recipe data.",
+        [],
+        422
+    );
+
+
 }
 
-$itemId = filter_var(
+
+
+
+
+$itemId =
+filter_var(
     $input['item_id'] ?? null,
     FILTER_VALIDATE_INT
 );
 
-$inventoryId = filter_var(
+
+
+$inventoryId =
+filter_var(
     $input['inventory_id'] ?? null,
     FILTER_VALIDATE_INT
 );
 
-$requiredQuantity = filter_var(
+
+
+$quantity =
+filter_var(
     $input['required_quantity'] ?? null,
     FILTER_VALIDATE_FLOAT
 );
 
-$unitType = strtoupper(
-    trim((string) ($input['unit_type'] ?? ''))
-);
 
-$allowedUnits = [
-    'GRAM',
-    'KILOGRAM',
-    'MILLILITER',
-    'LITER',
-    'PIECE'
-];
 
-if (!$itemId || $itemId < 1) {
-    respond(false, 'Invalid menu item.', [], 422);
-}
 
-if (!$inventoryId || $inventoryId < 1) {
-    respond(false, 'Invalid inventory item.', [], 422);
-}
+if(!$itemId || !$inventoryId){
 
-if (
-    $requiredQuantity === false
-    || $requiredQuantity <= 0
-) {
+
     respond(
         false,
-        'Required quantity must be greater than zero.',
+        "Invalid menu or inventory item.",
         [],
         422
     );
+
+
 }
 
-if (!in_array($unitType, $allowedUnits, true)) {
-    respond(false, 'Invalid unit type.', [], 422);
+
+
+
+if(
+    $quantity === false
+    ||
+    $quantity <= 0
+){
+
+
+    respond(
+        false,
+        "Quantity must be greater than zero.",
+        [],
+        422
+    );
+
+
 }
 
-try {
-    $statement = $pdo->prepare("
-        INSERT INTO menu_item_inventory (
+
+
+
+try{
+
+
+/*
+|--------------------------------------------------------------------------
+| Get Unit Automatically
+|--------------------------------------------------------------------------
+*/
+
+
+    $inventoryStatement =
+    $pdo->prepare("
+
+        SELECT
+            unit_type
+        FROM inventory_items
+        WHERE inventory_id = :inventory_id
+
+    ");
+
+
+
+    $inventoryStatement->execute([
+
+        ':inventory_id'=>$inventoryId
+
+    ]);
+
+
+
+    $inventory =
+    $inventoryStatement
+    ->fetch(PDO::FETCH_ASSOC);
+
+
+
+
+
+    if(!$inventory){
+
+
+        throw new RuntimeException(
+            "Inventory item not found."
+        );
+
+
+    }
+
+
+
+
+
+    $unitType =
+    $inventory['unit_type'];
+
+
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Duplicate Check
+|--------------------------------------------------------------------------
+*/
+
+
+    $check =
+    $pdo->prepare("
+
+        SELECT
+            menu_item_inventory_id
+        FROM menu_item_inventory
+        WHERE item_id = :item_id
+        AND inventory_id = :inventory_id
+
+    ");
+
+
+
+    $check->execute([
+
+        ':item_id'=>$itemId,
+
+        ':inventory_id'=>$inventoryId
+
+    ]);
+
+
+
+
+    if($check->fetch()){
+
+
+        throw new RuntimeException(
+            "This ingredient already exists."
+        );
+
+
+    }
+
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Insert Recipe
+|--------------------------------------------------------------------------
+*/
+
+
+    $statement =
+    $pdo->prepare("
+
+        INSERT INTO menu_item_inventory
+        (
             item_id,
             inventory_id,
             required_quantity,
             unit_type
-        ) VALUES (
+        )
+
+        VALUES
+        (
             :item_id,
             :inventory_id,
-            :required_quantity,
+            :quantity,
             :unit_type
         )
+
     ");
 
+
+
+
     $statement->execute([
-        ':item_id' => $itemId,
-        ':inventory_id' => $inventoryId,
-        ':required_quantity' => $requiredQuantity,
-        ':unit_type' => $unitType
+
+
+        ':item_id'=>$itemId,
+
+
+        ':inventory_id'=>$inventoryId,
+
+
+        ':quantity'=>$quantity,
+
+
+        ':unit_type'=>$unitType
+
+
     ]);
 
+
+
+
+
     respond(
+
         true,
-        'Ingredient added to recipe successfully.',
+
+        "Ingredient added successfully.",
+
         [
-            'menu_item_inventory_id' =>
-                (int) $pdo->lastInsertId()
+
+            "id" =>
+            (int)$pdo->lastInsertId()
+
         ],
+
         201
+
     );
-} catch (PDOException $exception) {
-    if ($exception->getCode() === '23000') {
-        respond(
-            false,
-            'This ingredient is already linked to the selected menu item.',
-            [],
-            422
-        );
-    }
+
+
+
+}
+catch(RuntimeException $e){
+
+
+    respond(
+
+        false,
+
+        $e->getMessage(),
+
+        [],
+
+        422
+
+    );
+
+
+}
+catch(Throwable $e){
+
 
     error_log(
-        'Recipe create error: '
-        . $exception->getMessage()
+        $e->getMessage()
     );
 
+
     respond(
+
         false,
-        'Unable to add ingredient.',
+
+        "Unable to add ingredient.",
+
         [],
+
         500
+
     );
+
+
 }

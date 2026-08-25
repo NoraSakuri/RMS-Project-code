@@ -144,6 +144,50 @@ $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 
+    <div class="modal-overlay" id="recipeModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+            <h2>
+                Setup Recipe
+            </h2>
+
+            <button onclick="closeRecipe()">
+                ×
+            </button>
+        </div>
+
+
+        <input type="hidden" id="recipeItemId">
+
+
+        <div id="recipeRows">
+
+        </div>
+
+
+        <button
+            type="button"
+            onclick="addRecipeRow()"
+            class="primary-btn"
+        >
+            + Add Ingredient
+        </button>
+
+
+        <button
+            type="button"
+            onclick="saveRecipe()"
+            class="primary-btn full"
+        >
+            Save Recipe
+        </button>
+
+    </div>
+
+</div>
+
     <script src="../assets/js/menu.js"></script>
 </body>
 

@@ -197,6 +197,7 @@ try {
     $subtotal = 0.0;
 
     foreach ($items as $item) {
+        
         $itemId = filter_var(
             $item['item_id'] ?? null,
             FILTER_VALIDATE_INT
@@ -530,21 +531,21 @@ try {
 |--------------------------------------------------------------------------
 */
 
-$reservationAutoCompleted = false;
+    $reservationAutoCompleted = false;
 
-/*
+    /*
 | Only check reservation when the selected table
 | was RESERVED before creating the order.
 */
-if ($tableStatus === 'RESERVED') {
+    if ($tableStatus === 'RESERVED') {
 
-    /*
+        /*
     |--------------------------------------------------------------------------
     | Find today's confirmed reservation for this table
     |--------------------------------------------------------------------------
     */
 
-    $reservationStatement = $pdo->prepare("
+        $reservationStatement = $pdo->prepare("
         SELECT
             reservation_id,
             customer_name,
@@ -565,40 +566,40 @@ if ($tableStatus === 'RESERVED') {
         FOR UPDATE
     ");
 
-    $reservationStatement->execute([
-        ':table_id' => $tableId
-    ]);
+        $reservationStatement->execute([
+            ':table_id' => $tableId
+        ]);
 
-    $activeReservation =
-        $reservationStatement->fetch(PDO::FETCH_ASSOC);
+        $activeReservation =
+            $reservationStatement->fetch(PDO::FETCH_ASSOC);
 
-    /*
+        /*
     |--------------------------------------------------------------------------
     | Complete reservation automatically
     |--------------------------------------------------------------------------
     */
 
-    if ($activeReservation) {
+        if ($activeReservation) {
 
-        $completeReservationStatement = $pdo->prepare("
+            $completeReservationStatement = $pdo->prepare("
             UPDATE reservations
             SET reservation_status = 'COMPLETED'
             WHERE reservation_id = :reservation_id
               AND UPPER(reservation_status) = 'CONFIRMED'
         ");
 
-        $completeReservationStatement->execute([
-            ':reservation_id' =>
+            $completeReservationStatement->execute([
+                ':reservation_id' =>
                 (int) $activeReservation['reservation_id']
-        ]);
+            ]);
 
-        if (
-            $completeReservationStatement->rowCount() === 1
-        ) {
-            $reservationAutoCompleted = true;
+            if (
+                $completeReservationStatement->rowCount() === 1
+            ) {
+                $reservationAutoCompleted = true;
+            }
         }
     }
-}
 
     /*
     |--------------------------------------------------------------------------
@@ -626,22 +627,22 @@ if ($tableStatus === 'RESERVED') {
     );
 
     jsonResponse(
-    true,
-    $reservationAutoCompleted
-        ? 'Order sent to kitchen and reservation completed automatically.'
-        : 'Order sent to kitchen successfully.',
-    [
-        'order_id' => $orderId,
-        'order_number' => $orderNumber,
-        'table_number' => $table['table_number'],
-        'subtotal' => $subtotal,
-        'tax_amount' => $taxAmount,
-        'total_amount' => $totalAmount,
-        'reservation_auto_completed' =>
+        true,
+        $reservationAutoCompleted
+            ? 'Order sent to kitchen and reservation completed automatically.'
+            : 'Order sent to kitchen successfully.',
+        [
+            'order_id' => $orderId,
+            'order_number' => $orderNumber,
+            'table_number' => $table['table_number'],
+            'subtotal' => $subtotal,
+            'tax_amount' => $taxAmount,
+            'total_amount' => $totalAmount,
+            'reservation_auto_completed' =>
             $reservationAutoCompleted
-    ],
-    201
-);
+        ],
+        201
+    );
 } catch (RuntimeException $exception) {
     if ($pdo->inTransaction()) {
         $pdo->rollBack();

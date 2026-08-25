@@ -77,6 +77,33 @@ try {
         'availability' => $availability
     ]);
 
+    if ($result) {
+
+        $inventory = $pdo->prepare("
+        INSERT INTO inventory_items
+        (
+            item_name,
+            category_id,
+            quantity,
+            minimum_stock,
+            unit_type
+        )
+        VALUES
+        (
+            :item_name,
+            :category_id,
+            0,
+            0,
+            'PIECE'
+        )
+    ");
+
+        $inventory->execute([
+            ':item_name' => $name,
+            ':category_id' => $categoryId
+        ]);
+    }
+
     respond(
         $result,
         $result
