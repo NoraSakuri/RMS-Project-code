@@ -1,4 +1,5 @@
 <?php
+$pageTitle = "Order Management";
 
 require_once "../../back-end/middleware/auth.php";
 require_once "../../../config/database.php";
