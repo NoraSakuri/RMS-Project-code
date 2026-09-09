@@ -53,4 +53,34 @@ class Staff
             $isActive
         ]);
     }
+
+    public function updateLoginAttempt($staff_id, $attempts, $lockedUntil = null)
+{
+    $stmt = $this->pdo->prepare("
+        UPDATE staff
+        SET failed_attempts = ?, locked_until = ?
+        WHERE staff_id = ?
+    ");
+
+    return $stmt->execute([
+        $attempts,
+        $lockedUntil,
+        $staff_id
+    ]);
+}
+
+
+    public function resetLoginAttempt($staff_id)
+{
+    $stmt = $this->pdo->prepare("
+        UPDATE staff
+        SET failed_attempts = 0,
+            locked_until = NULL
+        WHERE staff_id = ?
+    ");
+
+    return $stmt->execute([
+        $staff_id
+    ]);
+}
 }
