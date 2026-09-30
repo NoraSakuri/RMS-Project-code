@@ -114,6 +114,7 @@ Cashier	Cashier	cashier123
 These accounts are included for local demonstration and testing. Passwords should be changed in a real deployment.
 ## Registration and Access Control
 New staff can register through the registration page. Public registration supports Manager, Waiter, Chef, and Cashier roles. A newly registered account remains inactive until it is approved by an administrator.
+
 The system uses session-based authentication and role-based access control to restrict pages and functions according to the user's role.
 ## Reports
 The reporting module supports restaurant business information such as sales and payment data. Report export functions use:
@@ -125,8 +126,11 @@ restaurant_management_system
 The supplied SQL file creates the core database tables and demonstration data.
 ## Notes
 This project was developed for an academic Computing Project and is intended for local demonstration using XAMPP.
+
 Before final submission or deployment, make sure that database/rms_db.sql is synchronized with the final PHP code and that all tables and columns used by the application are included in the SQL file.
 ## Author
 Phyo Sandar Htun
+
 NCC Education Level 5 Diploma in Computing
+
 NVL College
