@@ -53,6 +53,7 @@ The RMS includes functions for user management, menu and category management, cu
 - Dompdf
 - PhpSpreadsheet
 ## Project Structure
+```
 RMS Project Code/
 ├── config/
 │   ├── config.php
@@ -77,6 +78,7 @@ RMS Project Code/
 ├── composer.json
 ├── composer.lock
 └── vendor/
+```
 ## System Requirements
 - Apache web server
 - MySQL or MariaDB
