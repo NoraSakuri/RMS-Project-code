@@ -6,20 +6,21 @@ This project is a web-based Restaurant Management System (RMS) developed to supp
 The RMS includes functions for user management, menu and category management, customer orders, kitchen operations, billing and payment, inventory, restaurant tables and reservations, and business reports.
 Main Features
 Admin
-- Manage staff accounts and user approval
-- Manage menu items and categories
-- Manage inventory
-- Manage tables and reservations
-- View kitchen and order information
-- Access billing and payment information
-- View and export reports
-- Manage system users
+Manage staff accounts and approve user registrations  
+Manage all system users and assign or change user roles  
+Activate, deactivate, or update user accounts  
+Manage menu items and categories  
+Manage inventory  
+Manage tables and reservations  
+Manage kitchen and order information  
+Access billing and payment information  
+View and export reports
 Manager
 - View dashboard information
 - Manage menu items and categories
 - Manage inventory
 - Manage tables and reservations
-- Monitor orders and kitchen status
+- Manage orders and kitchen status
 - View and export reports
 Waiter
 - View available tables
