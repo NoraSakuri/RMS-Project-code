@@ -102,13 +102,13 @@ RMS Project Code/
 composer install
 8. Open the system in a browser. For example, if the project folder is named RMS Project Code:
 http://localhost/RMS%20Project%20Code/src/front-end/index.php
-Default Demonstration Accounts
-Role	Username	Password
-Admin	Admin	admin123
-Manager	Manager	manager123
-Chef	Chef	chef123
-Waiter	Waiter	waiter123
-Cashier	Cashier	cashier123
+## Default Demonstration Accounts
+### Role	Username	Password
+- Admin	Admin	admin123
+- Manager	Manager	manager123
+- Chef	Chef	chef123
+- Waiter	Waiter	waiter123
+- Cashier	Cashier	cashier123
 
 
 These accounts are included for local demonstration and testing. Passwords should be changed in a real deployment.
